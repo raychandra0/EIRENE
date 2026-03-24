@@ -3,6 +3,8 @@ c             eapli,empli,eipli,ephpli,eppli
 cdr dec. 15:  comments added. missing tallies ppeli, epeli, etc..??
 cpb jan. 18:  array NFSTPI moved to module EIRMOD_COMUSR
 cdr jan. 22:  vectorial MXPL_VEC tallies
+cdr mar. 23:  fetch_outau --> fetch_outaui renamed, returns selected integrated tallies
+cdr           fetch_outau added. returns selected tallies
 
       MODULE EIRMOD_COUTAU
 cdr  mostly global tallies integrated from more deeply
@@ -20,7 +22,8 @@ cdr  Few tallies are directly scored: ptrash, etrash, .... xmcp
       PRIVATE
 
       PUBLIC :: EIRENE_ALLOC_COUTAU, EIRENE_DEALLOC_COUTAU,
-     .          EIRENE_INIT_COUTAU, EIRENE_FETCH_OUTAU,
+     .          EIRENE_INIT_COUTAU, 
+     .          EIRENE_FETCH_OUTAU, EIRENE_FETCH_OUTAUI,
      .          EIRENE_WRITE_COUTAU, EIRENE_READ_COUTAU,
      .          EIRENE_INIT_COUTAU_REINIT,
      .          EIRENE_BROADCAST_COUTAU
@@ -2785,11 +2788,15 @@ cdr  surface tallies
       END SUBROUTINE EIRENE_READ_COUTAU
 
 
-      SUBROUTINE EIRENE_FETCH_OUTAU (OUTAU,ITAL,ISP,ISTRA,IUNOUT)
+      SUBROUTINE EIRENE_FETCH_OUTAUI (OUTAUI,ITAL,ISP,ISTRA,IUNOUT)
 cdr  return OUTAU = total (volume integrated tally),
 cdr    for tally ITAL, species ISP, stratum ISTRA
       REAL(DP) :: OUTAU
       INTEGER, INTENT(IN) :: ITAL, ISP, ISTRA, IUNOUT
+      REAL(DP), INTENT(OUT) :: OUTAUI
+
+      outaui=0._dp
+      IF (.not. ALLOCATED(PDENAI)) RETURN
 
       SELECT CASE (ITAL)
       CASE (1)
@@ -3003,10 +3010,46 @@ cdr                     ISP=0 is for sum over species AND vector components
       CASE (103)
         OUTAU = RIELI(ISP,ISTRA)
       CASE DEFAULT
-        WRITE (iunout,*) ' WRONG TALLY NUMBER IN FETCH_OUTAU '
+        WRITE (iunout,*) ' WRONG TALLY NUMBER IN FETCH_OUTAUI '
         WRITE (iunout,*) ' 0 RETURNED '
         OUTAU = 0
       END SELECT
+      OUTAUI=OUTAU
+
+      RETURN
+      END SUBROUTINE EIRENE_FETCH_OUTAUI
+
+
+      SUBROUTINE EIRENE_FETCH_OUTAU (OUTAU,ITAL,ISP,ISTR,IC1,IC2,IUNOUT)
+cdr return OUTAU = eirene tally,
+cdr for tally ITAL, species ISP, stratum ISTRA=IESTR?
+cdr The entire tally is returned with ic1=1, ic2=NSBOX_TAL 
+      USE EIRMOD_CESTIM 
+cdr   USE EIRMOD_CGRID, ONLY : NSBOX_TAL
+      USE EIRMOD_CSPEI, ONLY : IESTR
+      INTEGER, INTENT(IN) :: ITAL, ISP, ISTR, IUNOUT, IC1, IC2
+      REAL(DP), INTENT(OUT) :: OUTAU(NRAD)
+      INTEGER :: I, K, NF, IINDEX
+
+      OUTAU=0._DP
+
+CDR  CHECK: IESTR=ISTR ??
+      IF (IESTR .NE. ISTR) THEN
+        WRITE (IUNOUT,*) 'STRATUM NO. CONFLICT IN FETCH_OUTAU '
+        WRITE (IUNOUT,*) 'RETURN VALUE = 0.0'
+        RETURN
+      ENDIF
+      
+      IF (.NOT.ALLOCATED (ESTIMV)) RETURN 
+
+      NF= NFIRST(ITAL)
+      K = ISP
+
+
+      DO I=IC1,IC2
+              IINDEX=NADDV(ITAL)*NRAD+(I-1)*NF+K
+              OUTAU(I)=ESTIMV(NADDV(ITAL)+K,I)
+      ENDDO
 
       RETURN
       END SUBROUTINE EIRENE_FETCH_OUTAU

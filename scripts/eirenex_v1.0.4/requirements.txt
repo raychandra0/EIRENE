@@ -1,0 +1,11 @@
+List of required modules:
+
+	numpy as np 
+	pandas as pd
+	xarray as xr
+	matplotlib.pyplot as plt
+	netCDF4 
+	os
+	imageio
+	matplotlib import ticker
+	matplotlib import axes

@@ -259,10 +259,16 @@ C  TOROIDAL SURFACE
               IRE = IRPTE(ISTS,1)
               IPA = IRPTA(ISTS,2)
               IPE = IRPTE(ISTS,2)
+<<<<<<< HEAD:src/output/outflx.f
 C  TRIANGULAR GRID
             case (4)
               sum1 = 0._dp
               nt = surf_trian_ordered(i)%numtr
+=======
+            case (4)
+              sum1 = 0._dp
+              nt =  surf_trian_ordered(i)%numtr
+>>>>>>> iter_eirene/feature/photon_transport:src/output/outflx.F
               do j = 1, nt
                  it = surf_trian_ordered(i)%itrias(j)
                  is = surf_trian_ordered(i)%itrisi(j)
@@ -274,6 +280,10 @@ C  TRIANGULAR GRID
               N1=NT+1
               N2=1
               N3=1
+<<<<<<< HEAD:src/output/outflx.f
+=======
+
+>>>>>>> iter_eirene/feature/photon_transport:src/output/outflx.F
               IRA = 1
               IRE = N1
               IPA = 1

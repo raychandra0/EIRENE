@@ -11,7 +11,10 @@ Database/H2VIBR
 Database/HYDHEL
 Database/METHAN*
 src/interfaces/couple_SOLPS-ITER/b2mod_dimensions.F
+<<<<<<< HEAD
 src/interfaces/couple_SOLPS_WG/b2mod_dimensions.F
+=======
+>>>>>>> iter_eirene/feature/photon_transport
 
 # files ignored in git repository
 git_version.h
@@ -37,7 +40,10 @@ local/
 *.error
 
 # files produced by the Makefile
+<<<<<<< HEAD
 Makefile
+=======
+>>>>>>> iter_eirene/feature/photon_transport
 LISTOBJ
 TAGS
 linux.*/
@@ -47,8 +53,11 @@ SGIirix*/
 sun*/
 T3E*/
 unicos*/
+<<<<<<< HEAD
 src/assistant/version.f
 !config/Makefile
+=======
+>>>>>>> iter_eirene/feature/photon_transport
 
 # files produced by scripts
 grep.lis

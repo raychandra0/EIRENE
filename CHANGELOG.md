@@ -14,6 +14,7 @@
 # Changelog of EIRENE repository:
 ---
 
+<<<<<<< HEAD
 ## X. Bonnin - SOLPS_wide_grids
 
 ### Based on SOLPS_event_limit - 99e131dfef3a448d0ccb512459f1a55bf211c6fd
@@ -134,6 +135,8 @@
 - Removed trailing whitespaces and alignment corrections
 - Minor code clean-up
 
+=======
+>>>>>>> iter_eirene/feature/photon_transport
 ---
 
 ## D. Harting - New EIRENE version: Release-V1.2.0 - 1ae241d96213ee7f22f83da44a15d1a561d2f476
@@ -226,6 +229,113 @@ New_EIRENE_Version=1.1.1
 - In EIRENE_OUTFLX for triangular meshes not based on an underlying structured grid printing of spatially resolved surface tallies was not done correctly. This issue has been fixed.
 - Additionally an option to order the triangle faces belonging to one spatially resolved surface into a continuous surface has been added (NFLAGS > 10). A table holding information such as coordinates of the start and endpoints of the triangle faces, the arc length along the surface and the surface tally for all requested species will be printed. Produce a sorted list of triangle edges for spatially resolved surfaces and use it in the output
 - For triangular meshes the NFLAGS flag has been extended. Here NFLAGS > 10 triggers the production of an additional table holding information about the spatially resolved surface namely start and end points of the triangle edges forming the surface, the arc length along the surface and the values of the surface tally for the requested species.
+<<<<<<< HEAD
+=======
+
+---
+
+## X. Bonnin - feature/SOLPS_push_clean-up - 73a692665efc344c074aeda2801d11566fbfba6a
+
+#### Based on develop - 1138b60ed32d3337e392f716ece854bfc89675a3
+
+** Changes **
+
+This commit is meant to apply good coding practices with minimal consequences on actual results. It addresses warnings from many different compilers to make the Eirene compilation as clean as reasonably achievable.
+
+- Applied CONTRIBUTING rule that Fortran file extensions should be .F instead of .f when the file must be pre-processed by the Makefile
+- Pointing to modified set of examples with .F file extensions
+- Removed forced usage of OpenMP compiler options
+- Added GRAPHICS option in CMakeLists.txt for compilation with or without plotting enabled
+- Added EIRENE_ALLOC_CGRID call in COUPLE_PARAM from SOLPS-ITER routine
+- Used the module provided NREACI, NATMI, NMOLI, NIONI, and NPHOTI in EIRENE_BROWSE_BLOCK_5 inside FIND_PARAM_JSON
+- Corrected initialization of WEISPZ in EIRMOD_LOCAT0
+- Added ITYP_OLD assignments in EIRMOD_LOCAT1
+- Added IFIRST initialization to zero in READ_COLRAD
+- Adding COUPLE_INIT routine in B2.5 interface
+- Moved EIRENE_EXPINT, EIRENE_LAX_M and EIRENE_MMDEI to their own files
+- Apply separate scaling to additional, algebraic and pumping tallies
+- Added TRCMELD output switch
+- Refactored computation of random seeds to be compatible with both OpenMP and MPI parallelization schemes
+- Do not use IUNOUT in EIRENE_MAIN before it is defined or after it has been deallocated
+- Added MPI_VERSION and MPI_MOD pragmas to handle older MPI implementations
+- Ensuring MPI_STATUSES has consistent size for MPI runs
+- Added a safety and error message in FIND_PARAM if the input file is found empty
+- Added a safety to check the fort.34 file is present before attempting to read it
+- Added safety for reading correct number of integers in block 10F of input file in READ_FIXFORM
+- Added safety against IPRNL=0 in SETUP_TIME_SURFACE
+- Adding safety against TEIL=0 and an error message in EIRMOD_ALGEBRA
+- Adding safety for incorrect algebraic manipulation of intensive tallies in ALGTAL
+- Added calls to flush out buffers
+- Added allocated status safeties
+- Used NPLSI instead of NPLS in READ_FIXFORM
+- Replaced NPHOT by NPHOTI in SCALE_TALLIES
+- Making NDXD, etc... PUBLIC in EIRMOD_EIRBRA
+- Removed NDXP, NDYP, NFL from EIRMOD_BRAEIR
+- Removed MAXPOIN from EIRMOD_SOLPS
+- Making LMETSP2 and LMETSPW2 threadprivate
+- Rearranged OpenMP critical region in EIRMOD_UPTBGK
+- Added OpenMP compliant error handling
+- Added information about thread number in error state in EIRENE_EXIT_OWN
+- Added census score output in TMSTEP
+- Added SHSTEP output in EIRMOD_INFCOP from SOLPS-ITER interface
+- Made FLUXES and FLUXS arrays in EIRSRT allocatable to avoid a segmentation fault
+- Made DUMMY allocatable in INTEGRATE_TALLIES
+- Made arrays in EIRMOD_PLTEIR allocatable
+- Added SAVE statement in EIRMOD_LOCAT0
+- Removed misleading superfluous output from CMakeLists.txt
+- Added standard deviation output in OUTIDLTAL
+- Removed redundant output in OUTIDLPLA
+- Corrected sizes of tally output arrays in SETTXT_INTAL
+- Conditioned some debugging output
+- Rewrote some output formats to avoid creation of temporary arrays
+- Clarified some code output
+- Some aesthetic output changes
+- Corrected format statements
+- Refactored reading of fort.13 file
+- Rewrote EIRENE_FTHOMP to avoid a fatal round-off error
+- Use of EVKEL instead of approximate value
+- Generalized usaged of FORT and FORT_LC variables
+- Introduced usage of EIRENE_OPENFILE in all interface routines
+- Avoiding obsolescent shared labels END DO statements, replaced with CONTINUE
+- Added _DP type declarations for floating-point constants
+- Added type assignments when using integers inside floating-point operations
+- Added TRIM operations and character ranges to avoid string length overflows
+- Added USE_OPENMP and USE_EXT_OPENMP pragmas to avoid compiler warnings from !$OMP instructions when compiling without OpenMP
+- Removed double definition of USE_OPENMP and USE_EXT_OPENMP in CMakeLists.txt
+- Added B25_EIRENE pre-processor pragmas in SOLPS-ITER interface routines
+- Added LEGACYCOMP alternate code
+- Added definition of GFORTRAN pragma in CMakeLists.txt
+- Added G95 pre-processor pragmas to deal with g95 compiler errors
+- Added NAGFOR pre-processor pragmas to deal with NAG compiler specific warnings
+- Replaced F2003 pre-processor (the compiler supports the Fortran 2003 standard) pragma with LEGACYCOMP (the compiler does not support the Fortran 2003 standard)
+- Removed unused IFOFF argument in EIRENE_FIND_TRIANG_DIM
+- Removed usage of obsolete variables NITER0 in INPUT and NTIME0 in READ_FIXFORM
+- Removed conflicting DIMENSION statements
+- Avoided use of module variables as loop indices
+- Added EXTERNAL definitions for called subroutines and functions
+- Using RETURN and END SUBROUTINE <SUB_NAME> statements to close subroutines
+- Moved statement functions to become contained subroutines
+- Added IMPLICIT NONE statements
+- Added some INTENT(IN) declarations
+- Added pre-processor pragmas around relevant variables only used if the pragma is declared
+- Moved declarations of loop index variables inside contained routines when appropriate
+- Add IGNORE comments to MPI and JSON modules use statements for SOLPS-style dependencies build
+- Removed superfluous MPI interface routines
+- Removed unused variables and modules
+- Removed unused labels, formats and error statements
+- Making use of lower/upper case more consistent
+- Removed tabulations, alignment corrections
+- Added some more clarifying comments
+- Removed trailing whitespaces and empty lines
+- Have figures in Manual listed by full relative path and file extension
+- Added missing comment about density validity range in AMJUEL file
+- Added some more produced file types to .gitignore file
+- Improved handling of external libraries in CMakeLists.txt
+- Added compilation dependency on local environment setup files
+- Added -fpe0 debug Intel compilation flag
+- Added -allow-argument-mismatch argument to GNU compilation above version 9.5 to avoid errors with MPI routines
+- Added Cray compiler support
+>>>>>>> iter_eirene/feature/photon_transport
 
 ---
 
