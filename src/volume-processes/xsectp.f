@@ -44,7 +44,7 @@ C
      .            RMASS2_2, CORSUM, COU, EIRENE_RATE_COEFF,
      .            EIRENE_ENERGY_RATE_COEFF,
      .            BREMS, Z, eirene_brems,
-     .            DEIMAX, TEIMIN
+     .            DEIMAX, TEIMIN, RMASS, EHEAVY, CHRDF0
       INTEGER :: IIRC, IION3, IPLS3, IATM3, IMOL3, KK, NRC, IATM,
      .           IRRC, J, IDSC, IPLS, NSERC5, KREAD, MODC, IATM1,
      .           ITYP, ISPZ, ITYP2, ISPZ2, IPHOT3
@@ -203,19 +203,34 @@ C
         ELSEIF (NRCP(IPLS).GT.0) THEN
           DO 82 NRC=1,NRCP(IPLS)
             KK=IREACP(IPLS,NRC)
-csw check photonic process
-            if(iswr(kk)==7) then    ! PH Processes
+            FACTKK=FREACP(IPLS,NRC)            
+            IF (FACTKK.EQ.0.D0) FACTKK=1.
+            
+            RMASS=RMASSP(IPLS)
+            CHRDF0=0.D0
+            IFRST=ISCD1P(ipls,nrc)
+            ISCND=ISCD2P(ipls,nrc)
+        
+            ISCDE=ISCDEP(IPLS,NRC)
+c           IESTM=IESTMP(IPLS,NRC)
+            IESTM=0
+            EHEAVY=ESCD1P(IPLS,NRC)
+c           EBULK=EBULKP(IPLS,NRC)
+            
+c check emission rate (OT process) or photonic (PH) process
+            IF (ISWR(KK)==7 .OR. ISWR(KK)==8) THEN    ! spont. emiss or OT Processes
               idsc=idsc+1
               nrrci=nrrci+1
               IF (NRRCI.GT.NREC) GOTO 992
 cdr  here should come call to xstph or xstot
-              call EIRENE_XSTRC(ipls,nrc,idsc,nrrci)
+              call EIRENE_XSTRC(ipls,nrc,idsc,irrc
+     .                        rmass,ifrst,iscnd,
+     .                        eheavy,chrdf0,iscde,iestm,
+     .                        kk,factkk)
               cycle
 csw end branch
             ELSEIF (ISWR(KK).EQ.6) THEN  ! RC Processes
-C
-              FACTKK=FREACP(IPLS,NRC)
-              IF (FACTKK.EQ.0.D0) FACTKK=1.
+
 C  RECOMBINATION MODEL FOR BULK IONS
               IDSC=IDSC+1
               NRRCI=NRRCI+1

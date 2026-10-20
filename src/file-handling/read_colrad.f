@@ -290,6 +290,12 @@ cdr  TO BE STORED ON M_HCOL(1:NHCOL_STORE).
 
           REACDAT(IR)%LOTH = .TRUE.
           REACDAT(IR)%OTH%IFIT = 5
+          IF (M_UPPER*M_LOWER .NE. 0) THEN
+cdr  OT rate (emissivity)
+cdr  turn population density into emissivity:  1/s
+cdr  7th digit of MODCLF: ISRW(KK)=7          
+            IFTFLG(IR,5)=IFTFLG(IR,5)+100
+          ENDIF
 
           CALL EIRENE_STORE_CRM_PARAMETERS(REACDAT(IR)%OTH)
 
